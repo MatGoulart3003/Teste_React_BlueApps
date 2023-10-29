@@ -1,16 +1,19 @@
-/* eslint-disable react/no-array-index-key */
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import api from "./Service/Api"
 
 function App() {  
 
+  const [id, setId] = useState (0)
+  const [idEdited, setIdEdited] = useState(0)
   const [title, setTitle] = useState ('')
-  const [anotation, setAnotation] = useState ('')
-  const [createAnotationButton, setCreateAnotationButton] = useState (false)
+  const [body, setbody] = useState ('')
+  const [createbodyButton, setCreatebodyButton] = useState (false)
   const [anotationList, setAnotationList] = useState([])
   const [isEditing, setIsEditing] = useState(false)
+  
 
-  const handleCreateAnotationButton = () => {
-    setCreateAnotationButton(!createAnotationButton)
+  const handleCreatebodyButton = () => {
+    setCreatebodyButton(!createbodyButton)
   }
 
   const handleTitleChange = (event) => {
@@ -18,20 +21,24 @@ function App() {
   };
 
   const handleDescricaoChange = (event) => {
-    setAnotation(event.target.value)
+    setbody(event.target.value)
   };
 
   const addAnotation = () => {
-    if (title && anotation) {
-      const newAnotation = { title, anotation }
+    if (title && body) {         
+      const newAnotation = { id, title, body }
       if (isEditing){
-        setAnotationList([...anotationList, newAnotation]);
+        const editedAnotation = {id:idEdited, title, body}
+        setAnotationList([...anotationList, editedAnotation]);
         setIsEditing(false);
-      }
-      setAnotationList([...anotationList, newAnotation])
+      }else{
+        setAnotationList([...anotationList, newAnotation])
+        setId((id) => id + 1)  
+      }      
       setTitle('')
-      setAnotation('')
-      handleCreateAnotationButton()
+      setbody('')
+     
+      handleCreatebodyButton()
     } else {
       alert('Por favor, preencha o título e a descrição.')
     }
@@ -46,22 +53,48 @@ function App() {
   const editAnotation = (index) => {
     const anotationToEdit = anotationList[index]
     setTitle(anotationToEdit.title)
-    setAnotation(anotationToEdit.anotation)
+    setbody(anotationToEdit.body)
+    setIdEdited(anotationToEdit.id)
     setIsEditing(true)
     deleteAnotation(index)
-    handleCreateAnotationButton()
+    handleCreatebodyButton()
   };
 
   
 
+  const getAnotationL = async () => {
+    try{
+      
+      const response = await api.get('/posts')
+      const formattedData = response.data
+      .filter(item => item.userId === 1)
+      .map(item => ({
+        id: item.id,
+        title: item.title,
+        body: item.body
+      }))
+      setAnotationList(formattedData)      
+      if (formattedData.length > 0) {
+       setId(formattedData[formattedData.length - 1].id + 1)      
+      }  
+      
+    }catch (error){
+      console.error(error)
+    }
+  }
+  
+  useEffect(() => {
+    getAnotationL();
+  }, []);
+
   return (
     <div>
      <h1>App de Anotações</h1>
-     {!createAnotationButton && (
-      <button type="button" onClick={handleCreateAnotationButton}> Criar Anotação</button>
+     {!createbodyButton && (
+      <button type="button" onClick={handleCreatebodyButton}> Criar Anotação</button>
      )}
     
-     {createAnotationButton && (
+     {createbodyButton && (
       <form>
         <label>
           Titulo:
@@ -69,7 +102,7 @@ function App() {
         </label>
         <label>
           Descrição:
-          <input type="text" value={anotation} onChange={handleDescricaoChange} />
+          <input type="text" value={body} onChange={handleDescricaoChange} />
         </label>       
             <button type="button" onClick={addAnotation}> Salvar </button>   
       </form>
@@ -79,7 +112,7 @@ function App() {
       <ul>
         {anotationList.map((item, index) => (
           <li key={index}>
-            <strong>{item.title}</strong>: {item.anotation}
+            <h3>{item.id}= </h3> <h3>{item.title}: </h3> <h3>{item.body}</h3> 
             <button type="button" onClick={() => editAnotation(index)}> Editar </button>
             <button type="button" onClick={() => deleteAnotation(index)}> Remover </button>
           </li>
