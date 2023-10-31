@@ -37,7 +37,10 @@ function App() {
       let newAnotation = { id, title, body }
       if (isEditing){
         const editedAnotation = {id:idEdited, title, body}
-        setAnotationList([...anotationList, editedAnotation]);
+        const auxList = [...anotationList];
+        const index = auxList.findIndex(anotation => anotation.id === idEdited)
+        auxList.splice(index, 1, editedAnotation)
+        setAnotationList([...auxList]);
         setIsEditing(false);
       }else{        
         setAnotationList([...anotationList, newAnotation])
@@ -50,7 +53,7 @@ function App() {
       handleCreatebodyButton()
       Swal.fire({
         icon: 'success',
-        title: 'Your work has been saved',
+        title: 'Dados salvos com sucesso!',
         showConfirmButton: false,
         timer: 1500
       })
@@ -95,14 +98,12 @@ function App() {
     const auxList = [...anotationList];
     const index = auxList.findIndex(anotation => anotation.id === idAnotation)
     console.log(index)
-    const anotationToEdit = anotationList[index]
-    setTitle(anotationToEdit.title)
-    setbody(anotationToEdit.body)
-    setIdEdited(anotationToEdit.id)
-    editAnotationBack(anotationToEdit)
+    setTitle(anotationList[index].title)
+    setbody(anotationList[index].body)
+    setIdEdited(anotationList[index].id)
+    editAnotationBack(anotationList[index])
     setIsEditing(true)
     console.log(index)
-    deleteAnotation(idAnotation)
     handleCreatebodyButton()
   };
 
