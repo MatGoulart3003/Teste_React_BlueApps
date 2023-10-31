@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react"
+import Swal from "sweetalert2";
 import api from "./Service/Api"
 import TitleApp from "./components/TitleApp"
-import Swal from "sweetalert2";
+
 
 function App() {  
 
@@ -24,6 +25,13 @@ function App() {
 
   const handleDescricaoChange = (event) => {
     setbody(event.target.value)
+  };
+
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Faz a rolagem suavemente
+    });
   };
 
   const postAnotationBack = (newAnotation) => {
@@ -102,6 +110,7 @@ function App() {
     setbody(anotationList[index].body)
     setIdEdited(anotationList[index].id)
     editAnotationBack(anotationList[index])
+    handleScrollToTop()
     setIsEditing(true)
     console.log(index)
     handleCreatebodyButton()
@@ -146,39 +155,42 @@ function App() {
   }, []);
 
   return (
-    <div className="bg-blue-100	">
+    <div className="bg-indigo-200 p-1.5 m-10 rounded-lg">
       <TitleApp />
-     <div className="mx-auto lg:text-center">
+     <div className="lg:text-center bg-indigo-300 p-1.5 m-10 rounded-lg">
      {!createbodyButton && (
       <button type="button" className="m-5 rounded-md bg-indigo-600 px-10 py-1.5 text-center text-lg font-semibold
        text-white hover:bg-indigo-500"
        onClick={handleCreatebodyButton}> Criar Anotação</button>
      )}
     
-     </div>
+     
      
      {createbodyButton && (
-      <div className= "mx-auto max-w-2xl lg:text-center p-6 bg-blue-100">
+      <div className= "mx-auto max-w-2xl lg:text-center p-6 py-1.5">
         <form >
           <label className="block text-lg m-5 font-medium leading-6 text-gray-900">
             Titulo: 
             <input
              className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            type="text" value={title} onChange={handleTitleChange} onKeyDown={handleKeyDown}/>          
+             type="text" value={title} onChange={handleTitleChange} onKeyDown={handleKeyDown}/>          
           </label>
           <label className="block text-lg m-5 font-medium leading-6 text-gray-900">
             Descrição:
             <input 
              className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            type="text" ref={secondInput} value={body} onChange={handleDescricaoChange} onKeyDown={handleKeypress} />
+             type="text" ref={secondInput} value={body} onChange={handleDescricaoChange} onKeyDown={handleKeypress} />
           </label>       
               <button className="m-5 rounded-md bg-indigo-600 px-10 py-1.5 text-center text-lg font-semibold
         text-white hover:bg-indigo-500" type="button" onClick={addAnotation}> Salvar </button>   
         </form>
       </div>
      )}
+    </div>
 
-      <div className="mx-auto max-w-2xl lg:text-center p-6 bg-blue-100">
+
+    <div className=" bg-indigo-300 py-1.5 m-10 rounded-lg ">
+      <div className="mx-auto max-w-2xl lg:text-center p-6">
           <h1 className="mt-2 font-bold text-blue-700 text-2xl" >Lista de Anotações</h1>
       </div>
       <ul className="px-20 divide-y divide-blue-700 ">
@@ -189,15 +201,15 @@ function App() {
               <p className="mt-1 truncate text-base leading-5 text-gray-500">{item.body}</p> 
             </div>
             
-            <button className="rounded-md bg-indigo-400 px-10 py-1.5 text-center text-lg font-semibold
-       text-white hover:bg-indigo-500" type="button" onClick={() => editAnotation(item.id)}> Editar </button>
-            <button className="rounded-md bg-indigo-500 px-10 py-1.5 text-center text-lg font-semibold
-       text-white hover:bg-indigo-500" type="button" onClick={() => deleteAnotation(item.id)}> Remover </button>
-          </li>
-          
-        ))}
-      </ul>
-
+              <button className="rounded-md bg-indigo-400 px-10 py-1.5 text-center text-lg font-semibold
+        text-white hover:bg-indigo-500" type="button" onClick={() => editAnotation(item.id)}> Editar </button>
+              <button className="rounded-md bg-indigo-500 px-10 py-1.5 text-center text-lg font-semibold
+        text-white hover:bg-indigo-500" type="button" onClick={() => deleteAnotation(item.id)}> Remover </button>
+            </li>
+            
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }
