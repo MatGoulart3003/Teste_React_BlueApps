@@ -197,8 +197,8 @@ function App() {
         {anotationList.map((item, index) => (
           <li key={index} className="flex justify-between gap-x-6 py-5" >
             <div className="min-w-0 flex-auto ">
-              <p className="text-lg font-semibold leading-6 text-gray-900">{item.title}</p>
-              <p className="mt-1 truncate text-base leading-5 text-gray-500">{item.body}</p> 
+              <p className="text-xl font-bold text-gray-900">{item.title}</p>
+              <p className="text-lg text-gray-700">{item.body}</p> 
             </div>
             
               <button className="rounded-md bg-indigo-400 px-10 py-1.5 text-center text-lg font-semibold
