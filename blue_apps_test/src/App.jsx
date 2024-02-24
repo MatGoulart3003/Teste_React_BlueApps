@@ -212,7 +212,7 @@ function App() {
         )}
       </div>
 
-      <div className=" bg-red-900 py-1.5 m-10 rounded-lg ">
+      <div className=" bg-slate-600 py-1.5 m-10 rounded-lg ">
         <div className="mx-auto max-w-2xl lg:text-center p-6">
           <h1 className="mt-2 font-bold text-blue-700 text-2xl">
             Lista de Anotações
